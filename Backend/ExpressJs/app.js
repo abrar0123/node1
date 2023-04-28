@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 
 app.get("/", (req, res) => {
-  res.send("welcome to express development with node Js ");
+  res.send("welcome to express development with node Js development ");
   console.log("good");
 });
 
