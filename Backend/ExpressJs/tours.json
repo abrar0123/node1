@@ -1,0 +1,51 @@
+[
+    {
+        "id": 101,
+        "name": "abrar",
+        "country": "pakistan",
+        "moveto": "australia",
+        "status": "developer"
+    },
+    {
+        "id": 102,
+        "name": "usman",
+        "country": "pakistan",
+        "moveto": "uk",
+        "status": "designer"
+    },
+    {
+        "id": 103,
+        "name": "nasir",
+        "country": "pakistan",
+        "moveto": "dubai",
+        "status": "designer"
+    },
+    {
+        "id": 103,
+        "name": "abrar",
+        "country": "pakistan",
+        "moveto": "australia",
+        "status": "developer"
+    },
+    {
+        "id": 104,
+        "name": "abrar",
+        "country": "pakistan",
+        "moveto": "australia",
+        "status": "developer"
+    },
+    {
+        "id": 105,
+        "name": "abrar",
+        "country": "pakistan",
+        "moveto": "australia",
+        "status": "developer"
+    },
+    {
+        "id": 106,
+        "name": "abrar",
+        "country": "pakistan",
+        "moveto": "australia",
+        "status": "developer"
+    }
+]
