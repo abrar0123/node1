@@ -24,6 +24,30 @@ mongoose
     console.log("error_\n\n", err);
   });
 
+const tourSchema = new mongoose.Schema({
+  id: Number,
+  name: String,
+  price: Number,
+  rating: Number,
+});
+
+const Tour = mongoose.model("Tour", tourSchema);
+
+const testTour = new Tour({
+  name: "Dummy Name",
+  price: 1,
+  rating: 1,
+});
+
+testTour
+  .save()
+  .then((doc) => {
+    console.log("data saved in mongoDB database", doc);
+  })
+  .catch((err) => {
+    console.log("error occurs here...", err);
+  });
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`App Running on Port ${PORT}...`);
