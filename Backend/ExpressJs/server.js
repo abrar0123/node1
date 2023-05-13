@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 const express = require("express");
 const app = express();
-
 const dotenv = require("dotenv");
 dotenv.config({ path: "./config.env" });
 
@@ -10,7 +9,7 @@ dotenv.config({ path: "./config.env" });
 //   process.env.DATABASE_PASSWORD
 // );
 
-mongoose
+const myconn = mongoose
   .connect(process.env.CONN_STR, {
     useNewUrlParser: true,
     // useCreateIndex: true,
@@ -18,34 +17,28 @@ mongoose
   })
   .then((con) => {
     console.log("conn__\n\n", con.connection);
-    console.log("connection successfully");
+    console.log("Connection Successfully");
   })
   .catch((err) => {
-    console.log("error_\n\n", err);
+    console.log("Connection Error_\n\n", err);
   });
+module.exports = { DataBase_Connection: myconn };
 
-const tourSchema = new mongoose.Schema({
-  id: Number,
-  name: String,
-  price: Number,
-  rating: Number,
+const Tour = require("./model/tourModel");
+
+const newTour = new Tour({
+  name: "us",
+  rating: 4.2,
+  price: 100,
 });
 
-const Tour = mongoose.model("Tour", tourSchema);
-
-const testTour = new Tour({
-  name: "Dummy Name",
-  price: 1,
-  rating: 1,
-});
-
-testTour
+newTour
   .save()
-  .then((doc) => {
-    console.log("data saved in mongoDB database", doc);
+  .then((e) => {
+    console.log("successfuly added", e);
   })
-  .catch((err) => {
-    console.log("error occurs here...", err);
+  .catch((e) => {
+    console.log("database error_", e);
   });
 
 const PORT = process.env.PORT || 3000;

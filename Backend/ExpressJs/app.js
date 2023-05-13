@@ -1,13 +1,26 @@
 const express = require("express");
 const fs = require("fs");
+const Tour = require("./model/tourModel");
+// const { Tour } = require("./model/tourModel");
 const app = express();
+const Connection = require("./server");
 
-app.use(express.json());
+// const DB = process.env.DATABASE.replace(
+//   "<PASSWORD>",
+//   process.env.DATABASE_PASSWORD
+// );
+
+
+//  mongodb database connection established
+
+Connection.DataBase_Connection;
+
+app.use(express.json()); // middleware
 
 app.get("/", (req, res) => {
   res.send({
-    message: "welcome to express development with node Js development ",
-    app: "Node",
+    message: "welcome to express development with Node JS development ",
+    app: "Node app",
   });
 });
 
@@ -15,29 +28,66 @@ const json = fs.readFileSync(`${__dirname}/tours.json`);
 
 const tours = JSON.parse(json);
 
-const getAllTours = (req, res) => {
-  res.status(200).json({
-    status: "success",
-    results: tours.length,
-    data: {
-      tours: tours,
-    },
-  });
+const getAllTours = async (req, res) => {
+  try {
+    const tour1 = await Tour.find();
+    res.status(200).json({
+      status: "Successful",
+      results: tour1.length,
+      data: {
+        tours: tour1,
+      },
+    });
+  } catch (error) {
+    console.log("error__\n\n", error);
+    res.status(404).json({
+      status: "fail",
+      error: error,
+    });
+  }
 };
 
-const postTour = (req, res) => {
-  const newId = tours[tours.length - 1].id + 1;
-  const newTour = Object.assign({ id: newId }, req.body);
+const postTour = async (req, res) => {
+  // const newId = tours[tours.length - 1].id + 1;
+  // const newTour = Object.assign({ id: newId }, req.body);
+  try {
+    console.log("body__1", req.body);
 
-  tours.push(newTour);
-  fs.writeFile(`${__dirname}/tours.json`, JSON.stringify(tours), (err) => {
+    const newTour = await new Tour(req.body);
+
+    newTour
+      .save()
+      .then((e) => {
+        console.log("successfuly added", e);
+      })
+      .catch((e) => {
+        console.log("database error_", e);
+      });
+
     res.status(201).json({
       status: "success",
       data: {
-        tours: newTour,
+        tour: newTour,
       },
     });
-  });
+  } catch (error) {
+    console.log("body__2", error);
+    res.status(401).json({
+      status: "fail",
+      message: "Invalid data sent",
+      eror: error,
+    });
+  }
+
+  // tours.push(newTour);
+  // fs.writeFile(`${__dirname}/tours.json`, JSON.stringify(tours), (err) => {
+  //   res.status(201).json({
+  //     status: "success",
+  //     data: {
+  //       tours: newTour,
+  //     },
+  //   });
+  // });
 };
 
 //  respond to url parameter data
@@ -97,6 +147,7 @@ const deleteTour = (req, res) => {
     data: null,
   });
 };
+
 // app.get("/api/v1/tours", getAllTours);
 // app.post("/api/v1/tours", postTour);
 // app.get("/api/v1/tours/:id", getTour);
@@ -108,5 +159,5 @@ app.route("/api/v1/tours/:id").get(getTour).patch(patchTour).delete(deleteTour);
 
 const port = 5000;
 app.listen(port, () => {
-  console.log(`Server stated in express at port ${port}...`);
+  console.log(`Server started in express at port ${port}...`);
 });
