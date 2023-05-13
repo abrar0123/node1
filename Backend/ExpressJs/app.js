@@ -3,17 +3,16 @@ const fs = require("fs");
 const Tour = require("./model/tourModel");
 // const { Tour } = require("./model/tourModel");
 const app = express();
-const Connection = require("./server");
+const server = require("./server");
 
 // const DB = process.env.DATABASE.replace(
 //   "<PASSWORD>",
 //   process.env.DATABASE_PASSWORD
 // );
 
-
 //  mongodb database connection established
 
-Connection.DataBase_Connection;
+server.DataBase_Connection;
 
 app.use(express.json()); // middleware
 
@@ -51,19 +50,8 @@ const postTour = async (req, res) => {
   // const newId = tours[tours.length - 1].id + 1;
   // const newTour = Object.assign({ id: newId }, req.body);
   try {
-    console.log("body__1", req.body);
 
-    const newTour = await new Tour(req.body);
-
-    newTour
-      .save()
-      .then((e) => {
-        console.log("successfuly added", e);
-      })
-      .catch((e) => {
-        console.log("database error_", e);
-      });
-
+    const newTour = await Tour.create(req.body);
     res.status(201).json({
       status: "success",
       data: {
@@ -71,7 +59,6 @@ const postTour = async (req, res) => {
       },
     });
   } catch (error) {
-    console.log("body__2", error);
     res.status(401).json({
       status: "fail",
       message: "Invalid data sent",
@@ -91,23 +78,25 @@ const postTour = async (req, res) => {
 };
 
 //  respond to url parameter data
-const getTour = (req, res) => {
-  const id = req.params.id * 1;
-  const tour = tours.find((e) => e.id === id);
+const getTour = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const tour = await Tour.findById(id);
 
-  if (!tour) {
-    return res.send(404).json({
+    res.status(200).json({
+      status: "success",
+      data: {
+        tours: tour,
+      },
+    });
+  } catch (error) {
+    console.log("error", error);
+    res.status(404).json({
       status: "fail",
       message: "Invaid Id",
+      error: error,
     });
   }
-
-  res.status(200).json({
-    status: "success",
-    data: {
-      tours: tour,
-    },
-  });
 };
 
 //  patch /update user record

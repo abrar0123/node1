@@ -16,32 +16,33 @@ const myconn = mongoose
     // useFindAndModify: false,
   })
   .then((con) => {
-    console.log("conn__\n\n", con.connection);
+    // console.log("conn__\n\n", con.connection);
     console.log("Connection Successfully");
   })
   .catch((err) => {
     console.log("Connection Error_\n\n", err);
   });
-module.exports = { DataBase_Connection: myconn };
 
-const Tour = require("./model/tourModel");
+// const Tour = require("./model/tourModel");
 
-const newTour = new Tour({
-  name: "us",
-  rating: 4.2,
-  price: 100,
-});
+// const newTour = new Tour({
+//   name: "us",
+//   rating: 4.2,
+//   price: 100,
+// });
 
-newTour
-  .save()
-  .then((e) => {
-    console.log("successfuly added", e);
-  })
-  .catch((e) => {
-    console.log("database error_", e);
-  });
+// newTour
+//   .save()
+//   .then((e) => {
+//     console.log("successfuly added", e);
+//   })
+//   .catch((e) => {
+//     console.log("database error_", e);
+//   });
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`App Running on Port ${PORT}...`);
 });
+
+module.exports = { DataBase_Connection: myconn, PORT: PORT };
