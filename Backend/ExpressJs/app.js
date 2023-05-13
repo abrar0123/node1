@@ -50,7 +50,6 @@ const postTour = async (req, res) => {
   // const newId = tours[tours.length - 1].id + 1;
   // const newTour = Object.assign({ id: newId }, req.body);
   try {
-
     const newTour = await Tour.create(req.body);
     res.status(201).json({
       status: "success",
@@ -100,41 +99,45 @@ const getTour = async (req, res) => {
 };
 
 //  patch /update user record
-const patchTour = (req, res) => {
-  const id = req.params.id * 1;
-  const tour = tours.find((e) => e.id === id);
+const patchTour = async (req, res) => {
+  // const id = req.params.id * 1;
 
-  if (!tour) {
-    return res.status(404).json({
+  try {
+    const updateTour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+    res.status(200).json({
+      status: "success",
+      data: {
+        tour: updateTour,
+      },
+    });
+  } catch (error) {
+    res.status(404).json({
       status: "fail",
-      message: "record not updated",
+      error: error,
     });
   }
-
-  res.status(200).json({
-    status: "success",
-    data: {
-      tour: "update....",
-    },
-  });
 };
 
 //  delete user record
-const deleteTour = (req, res) => {
-  const id = req.params.id * 1;
-  const tour = tours.find((e) => e.id === id);
+const deleteTour = async (req, res) => {
+  // const id = req.params.id * 1;
+  // const tour = tours.find((e) => e.id === id);
 
-  if (!tour) {
-    return res.status(404).json({
+  try {
+    const deleteTour = await Tour.findByIdAndDelete(req.params.id);
+    res.status(201).json({
+      status: "success",
+      data: deleteTour,
+    });
+  } catch (error) {
+    res.status(404).json({
       status: "fail",
-      message: "record not updated",
+      data: null,
     });
   }
-
-  res.status(204).json({
-    status: "success",
-    data: null,
-  });
 };
 
 // app.get("/api/v1/tours", getAllTours);
