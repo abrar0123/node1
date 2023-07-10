@@ -1,9 +1,10 @@
 const express = require("express");
 const fs = require("fs");
-const Tour = require("./model/tourModel");
+const DBModel = require("./model/tourModel");
 // const { Tour } = require("./model/tourModel");
 const app = express();
 const server = require("./server");
+
 
 // const DB = process.env.DATABASE.replace(
 //   "<PASSWORD>",
@@ -29,18 +30,20 @@ const tours = JSON.parse(json);
 
 const getAllTours = async (req, res) => {
   try {
-    const tour1 = await Tour.find();
+    const tour1 = await DBModel.find();
     res.status(200).json({
       status: "Successful",
+      source: "MongoDB Data",
+      howAdd: "You can add Data by Using Postman",
       results: tour1.length,
       data: {
-        tours: tour1,
+        MongoDB: tour1,
       },
     });
   } catch (error) {
     console.log("error__\n\n", error);
     res.status(404).json({
-      status: "fail",
+      status: "Fail To Fetch",
       error: error,
     });
   }
@@ -50,16 +53,16 @@ const postTour = async (req, res) => {
   // const newId = tours[tours.length - 1].id + 1;
   // const newTour = Object.assign({ id: newId }, req.body);
   try {
-    const newTour = await Tour.create(req.body);
+    const newTour = await DBModel.create(req.body);
     res.status(201).json({
-      status: "success",
+      status: "Data Successfully Inserted",
       data: {
         tour: newTour,
       },
     });
   } catch (error) {
     res.status(401).json({
-      status: "fail",
+      status: "Fail To Post",
       message: "Invalid data sent",
       eror: error,
     });
@@ -80,7 +83,7 @@ const postTour = async (req, res) => {
 const getTour = async (req, res) => {
   try {
     const id = req.params.id;
-    const tour = await Tour.findById(id);
+    const tour = await DBModel.findById(id);
 
     res.status(200).json({
       status: "success",
@@ -103,10 +106,14 @@ const patchTour = async (req, res) => {
   // const id = req.params.id * 1;
 
   try {
-    const updateTour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true,
-    });
+    const updateTour = await DBModel.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
     res.status(200).json({
       status: "success",
       data: {
@@ -127,7 +134,7 @@ const deleteTour = async (req, res) => {
   // const tour = tours.find((e) => e.id === id);
 
   try {
-    const deleteTour = await Tour.findByIdAndDelete(req.params.id);
+    const deleteTour = await DBModel.findByIdAndDelete(req.params.id);
     res.status(201).json({
       status: "success",
       data: deleteTour,
